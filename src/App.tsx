@@ -7,6 +7,7 @@ import { CssBaseline } from '@material-ui/core'
 import { Switch, Route, Redirect, BrowserRouter as Router } from 'react-router-dom'
 import Home from './Home'
 import Details from './Details'
+import { RecursivePartial } from './types'
 
 const theme = createMuiTheme({
   palette: {
@@ -19,17 +20,22 @@ theme.spacing(2)
 const redirectToHome = () =>
   <Redirect to="/" />
 
-export interface TableOptions {
-  page: number,
-  rowsPerPage: number,
-  filter: {
-    name: string,
-    malt: string
-  }
+export interface FilterParams {
+  name: string,
+  malt: string
 }
 
+export interface GlobalState {
+  page: number,
+  rowsPerPage: number,
+  filter: FilterParams
+}
+
+
+export type PartialGlobalState = RecursivePartial<GlobalState>
+
 const App: React.FC = () => {
-  const [options, setOptions] = useState<TableOptions>({
+  const [globalState, setGlobalState] = useState<GlobalState>({
     page: 0,
     rowsPerPage: 5,
     filter: {
@@ -38,8 +44,8 @@ const App: React.FC = () => {
     }
   })
 
-  const handleOptionsChange = (newOptions: TableOptions) =>
-    setOptions(defaultsDeep(options, newOptions))
+  const handleOptionsChange = (newState: PartialGlobalState) =>
+    setGlobalState(defaultsDeep(globalState, newState))
 
   return (
     <ThemeProvider theme={theme}>
@@ -48,8 +54,8 @@ const App: React.FC = () => {
         <Switch>
           <Route exact path="/">
             <Home
-              options={options}
-              onOptionsChange={handleOptionsChange}
+              state={globalState}
+              onStateChange={handleOptionsChange}
             />
           </Route>
           <Route path="/beer/:beerId" component={Details} />

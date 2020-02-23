@@ -5,6 +5,7 @@ import Toast from './Toast'
 import { CircularProgress, Typography, TableRow, Card, CardContent, CardMedia, makeStyles, createStyles, TableContainer, Paper, Table, TableBody, TableFooter, TablePagination, } from '@material-ui/core';
 import { Redirect } from 'react-router'
 import { composeParams } from './helpers'
+import { PartialGlobalState } from './App';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -29,8 +30,8 @@ const BeersList: FC<{
   page: number,
   rowsPerPage: number,
   filter: { name: string, malt: string },
-  onOptionsChange: (newOptions: any) => void
-}> = ({ page = 0, rowsPerPage = 5, filter, onOptionsChange }) => {
+  onStateChange: (newOptions: PartialGlobalState) => void
+}> = ({ page = 0, rowsPerPage = 5, filter, onStateChange }) => {
   const classes = useStyles()
   const [beers, setBeers] = useState<Beer[]>([])
   const [requestPending, setRequestPending] = useState(false)
@@ -57,9 +58,9 @@ const BeersList: FC<{
   const handleTileClick = (id: number) => () => setSelectedBeer(id)
 
   const handlePageChange = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) =>
-    onOptionsChange({ page: newPage })
+    onStateChange({ page: newPage })
 
-  const handleRowsPerPageChange: React.ChangeEventHandler<HTMLInputElement> = (event) => onOptionsChange({
+  const handleRowsPerPageChange: React.ChangeEventHandler<HTMLInputElement> = (event) => onStateChange({
     rowsPerPage: parseInt(event.target.value, 10),
     page: 0
   })
