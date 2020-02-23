@@ -39,7 +39,6 @@ const BeersList: FC<{
   const [selectedBeer, setSelectedBeer] = useState<number>()
 
   useEffect(() => {
-    setBeers([])
     const composedParams = composeParams(
       ['page', (page + 1).toString()],
       ['per_page', rowsPerPage.toString()],
@@ -66,14 +65,18 @@ const BeersList: FC<{
   })
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableBody>
-          <>
-            {selectedBeer && <Redirect to={`beer/${selectedBeer}`} />}
-            <TableRow>
-              {beers.length
-                ? (
+    <>
+      {selectedBeer && <Redirect to={`beer/${selectedBeer}`} />}
+      <TableContainer component={Paper}>
+        <Table aria-label="simple table">
+          <TableBody>
+            <>
+              <TableRow>
+                {requestPending ? (
+                  <th className={classes.container}>
+                    <CircularProgress />
+                  </th>
+                ) : beers.length ? (
                   beers.map(beer => (
                     <Card key={beer.name} component="td" className={classes.card} onClick={handleTileClick(beer.id)}>
                       <CardContent>
@@ -93,46 +96,41 @@ const BeersList: FC<{
                       />
                     </Card>
                   ))
-                )
-                : requestPending ? (
-                  <th className={classes.container}>
-                    <CircularProgress />
-                  </th>
-                )
-                  : (
-                    <th className={classes.container}>
-                      <Typography>No beers matching criteria :-(</Typography>
-                    </th>
-                  )}
+                ) : (
+                      <th className={classes.container}>
+                        <Typography>No beers matching criteria :-(</Typography>
+                      </th>
+                )}
+              </TableRow>
+              <Toast
+                open={!!errorMessage}
+                onClose={handleToastClose}
+                type="error"
+              >
+                {errorMessage}
+              </Toast>
+            </>
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                colSpan={3}
+                count={filter.malt || filter.name ? beers.length : 100}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={[5, 10, 20]}
+                page={page}
+                SelectProps={{
+                  inputProps: { 'aria-label': 'rows per page' },
+                  native: true,
+                }}
+                onChangePage={handlePageChange}
+                onChangeRowsPerPage={handleRowsPerPageChange}
+              />
             </TableRow>
-            <Toast
-              open={!!errorMessage}
-              onClose={handleToastClose}
-              type="error"
-            >
-              {errorMessage}
-            </Toast>
-          </>
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              colSpan={3}
-              count={filter.malt || filter.name ? beers.length : 100}
-              rowsPerPage={rowsPerPage}
-              rowsPerPageOptions={[5, 10, 20]}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-              onChangePage={handlePageChange}
-              onChangeRowsPerPage={handleRowsPerPageChange}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </>
   )
 }
 
