@@ -31,7 +31,6 @@ export interface GlobalState {
   filter: FilterParams
 }
 
-
 export type PartialGlobalState = RecursivePartial<GlobalState>
 
 const App: React.FC = () => {

@@ -4,7 +4,7 @@ import callApi, { RequestMethod } from './api'
 import Toast from './Toast'
 import { CircularProgress, Typography, Card, CardContent, CardMedia, makeStyles, createStyles, AppBar, Toolbar, IconButton, Paper, } from '@material-ui/core'
 import { useParams, Redirect } from 'react-router'
-import { ArrowBack } from '@material-ui/icons'
+import { ArrowBack, Image } from '@material-ui/icons'
 import { composeParams } from './helpers'
 
 const useStyles = makeStyles(() =>
@@ -147,10 +147,13 @@ const Details: FC<{}> = () => {
                 <Paper className={classes.similarBeers}>
                   {similarBeers.map((similarBeer) => (
                     <Card key={similarBeer.id} className={classes.similarBeer} onClick={handleSimilarBeerClick(similarBeer.id)}>
-                      <CardMedia
+                      {similarBeer.image_url ? (
+                        <CardMedia
                         className={classes.tileImage}
                         image={similarBeer.image_url}
-                      />
+                      />) : (
+                        <Image fontSize="large" />
+                      )}
                       {similarBeer.name}
                     </Card>
                   ))}
