@@ -32,18 +32,19 @@ export interface GlobalState {
 }
 
 export type PartialGlobalState = RecursivePartial<GlobalState>
+export const initialState = {
+  page: 0,
+  rowsPerPage: 5,
+  filter: {
+    name: '',
+    malt: ''
+  }
+}
 
 const App: React.FC = () => {
-  const [globalState, setGlobalState] = useState<GlobalState>({
-    page: 0,
-    rowsPerPage: 5,
-    filter: {
-      name: '',
-      malt: ''
-    }
-  })
+  const [globalState, setGlobalState] = useState<GlobalState>(initialState)
 
-  const handleOptionsChange = (newState: PartialGlobalState) =>
+  const handleStateChange = (newState: PartialGlobalState) =>
     setGlobalState(defaultsDeep(globalState, newState))
 
   return (
@@ -54,7 +55,7 @@ const App: React.FC = () => {
           <Route exact path="/">
             <Home
               state={globalState}
-              onStateChange={handleOptionsChange}
+              onStateChange={handleStateChange}
             />
           </Route>
           <Route path="/beer/:beerId" component={Details} />

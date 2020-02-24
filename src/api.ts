@@ -1,4 +1,4 @@
-const apiUrl = 'https://api.punkapi.com/v2'
+export const API_URL = 'https://api.punkapi.com/v2'
 
 export enum RequestMethod {
   GET = 'GET',
@@ -8,13 +8,14 @@ export enum RequestMethod {
 
 const callApi = <R> (endpoint: string, requestMethod: RequestMethod, requestBody?: Object) =>
   fetch(
-    `${apiUrl}/${endpoint}`, 
-    { 
-      method: requestMethod, 
-      body: JSON.stringify(requestBody), 
+    `${API_URL}/${endpoint}`,
+    {
+      method: requestMethod,
+      body: JSON.stringify(requestBody),
       headers: {
         'Content-Type': 'application/json'
-    } }
+      }
+    }
   )
     .then(res =>
       res.ok
