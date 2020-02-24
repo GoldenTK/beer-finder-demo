@@ -1,3 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Home renders correct structure 1`] = `ShallowWrapper {}`;
+
 exports[`renders correct structure 1`] = `ShallowWrapper {}`;
